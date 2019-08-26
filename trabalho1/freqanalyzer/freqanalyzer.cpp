@@ -6,25 +6,31 @@
 char chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 int char_ct[26];
 int num_ct[10];
+int count=0;
 
 int main(int argc,char *argv[]){
   
   char c; 
-  memset(char_ct,0,26*sizeof(int));
-  memset(num_ct,0,10*sizeof(int));
+  memset(char_ct,0,sizeof(char_ct));
+  memset(num_ct,0,sizeof(num_ct));
   
   while((c=getchar())!= EOF){
-    printf("%c",c);
   
     if(isalpha(c)){
+      count++;
       c = toupper(c);
-      char_ct[65-(int)c]++;
+     //printf("%c - %d\n",c,int(c));
+      char_ct[(int)c-65]++;
     }
     else
-    if(isdigit(c)) num_ct[48-(int)c];
-
+    if(isdigit(c)){
+       count++;
+       num_ct[(int)c-48]++;
+    }
   }
 
+  printf("\n");
+  
   for(int i=0;i<26;i++)
     printf("%c - %d\n",(char)65+i,char_ct[i]);
      
