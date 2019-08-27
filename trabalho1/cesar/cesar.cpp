@@ -5,7 +5,6 @@
 
 char chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-
 int char_valido(char c){
   char* ptr = strchr(chars,c);
   
@@ -57,8 +56,10 @@ int main(int argc,char *argv[]){
         if(isspace(c)) putchar(' ');
       } 
       else
-      printf("%c",chars[(pos-k)%tam_chars]);
-      
+      if ((pos-k)>0)
+        printf("%c",chars[(pos-k)%tam_chars]);
+      else
+        printf("%c",chars[tam_chars-(abs(pos-k)%tam_chars)]);
     }
     putchar('\n'); 
   }
