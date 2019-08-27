@@ -29,13 +29,13 @@ int main(int argc,char *argv[]){
     }
   }
 
-  printf("\n");
+  printf("Total chars: %d\n",count);
   
   for(int i=0;i<26;i++)
-    printf("%c - %d\n",(char)65+i,char_ct[i]);
+    printf("%c - %.2f%\n",(char)65+i,100*(float)char_ct[i]/count);
      
   for(int i=0;i<10;i++)
-    printf("%c - %d\n",(char)48+i,num_ct[i]);
+    printf("%c - %.2f%\n",(char)48+i,100*(float)num_ct[i]/count);
 
   return 0;
 }
