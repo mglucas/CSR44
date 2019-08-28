@@ -2,8 +2,14 @@
 #include<string.h>
 #include<ctype.h>
 #include<stdlib.h>
+#include<fstream>
+#include<iostream>
+
+using namespace std;
 
 char chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+char key[100];
+
 
 int char_valido(char c){
   char* ptr = strchr(chars,c);
@@ -15,55 +21,21 @@ int char_valido(char c){
 
 
 int main(int argc,char *argv[]){
-  
-  // encrypt signal
-  char c; 
-  // k = chave  
-  int k;
-  // Tamanho do vetor de chars 
-  int tam_chars = sizeof(chars)/sizeof(chars[0]) - 1;
-  // char position returned as int
-  signed int pos;
+  srand(time(NULL));
+
+  int i=0;
+  char c;  
+  // Zera a memoria
+  memset(key,0,sizeof(key));  
+
+  // Generating verman key.dat 
+  while((c=getchar())!= EOF){
+	key[i++] = (char)(90-rand()%25);
+//	printf("%d\n",i);
+//	printf("%c\n",key[i-1]);
+	printf("Char codificado:%c\n",(char)((c+key[i-1])%26+65));	
+  }
  
-  // key 
-  if(!strcmp(argv[2],"-k")) k = atoi(argv[3]);
-
-  // encrypt
-  if(!strcmp(argv[1],"-c")){
-    while((c=getchar())!= EOF){
-      pos = char_valido(c);
-      
-      if(pos == -1){  
-        if(c=='\n') putchar('\n');
-        else
-        if(isspace(c)) putchar(' ');
-      } 
-      else
-      printf("%c",chars[(pos+k)%tam_chars]);
-      
-    }
-    putchar('\n'); 
-  }
-  // decrypt
-  else
-  if(!strcmp(argv[1],"-d")){
-    while((c=getchar())!= EOF){
-      pos = char_valido(c);
-      
-      if(pos == -1){  
-        if(c=='\n') putchar('\n');
-        else
-        if(isspace(c)) putchar(' ');
-      } 
-      else
-      if ((pos-k)>0)
-        printf("%c",chars[(pos-k)%tam_chars]);
-      else
-        printf("%c",chars[tam_chars-(abs(pos-k)%tam_chars)]);
-    }
-    putchar('\n'); 
-  }
-
 
   return 0;
 }
