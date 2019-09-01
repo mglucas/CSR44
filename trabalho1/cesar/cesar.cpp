@@ -9,8 +9,7 @@ int char_valido(char c){
   char* ptr = strchr(chars,c);
   
   if(ptr == NULL) return -1;
-  else
-  return ptr-chars;
+  else return ptr-chars;
 }
 
 
