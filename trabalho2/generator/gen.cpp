@@ -2,6 +2,17 @@
 
 using namespace std;
 
+
+long int md5_int(string vetor){
+	long int sum=0;
+	for(int i=0;i<vetor.length();i++){
+		sum += (int)vetor[i]*(int)vetor[i]*(int)vetor[i]*(int)vetor[i]*(int)vetor[i];
+	}
+
+	return sum%999999;
+}
+
+
 int main(int argc,char *argv[]){
   
   /* Variables */
@@ -80,6 +91,7 @@ int main(int argc,char *argv[]){
 					fgets(test_local,sizeof(test_local),local);
 
 		  		if(!strcmp(pswd_test,test_local)){
+		  			cout << endl;
 		  			cout << "Correct password!!!" << endl;
 		  			cout << "Generating tokens" << endl;
 
@@ -96,7 +108,8 @@ int main(int argc,char *argv[]){
 							// Exec every time that minute is different to the last minute
 			  			if(min!= (1 + ltm->tm_min)){
 			  				tokens = fopen("tokens","r");
-				  			cout << "min" << endl;
+				  			cout << endl;
+				  			cout << "Enabled tokens:" << endl;
 				  			system("> tokens");
 						  	// get various components of tm structure.
 							  year = 1900 + ltm->tm_year;
@@ -113,8 +126,8 @@ int main(int argc,char *argv[]){
 		  						fgets(old_tokens,sizeof(old_tokens),tokens);
 		  						string _test(old_tokens);
 		  						//cout << _test << endl;
-		  						int_token[i] = stoi(_test,0,10);
-		  						cout << to_string(int_token[i]) << endl;
+                  int_token[i] = (long int) md5_int(_test);
+		  						cout << to_string(i) + "-: "<<to_string(int_token[i]) << endl;
 		  						_test.erase(std::remove(_test.begin(), _test.end(), '\n'),_test.end());
 		  						_seed = _test;
 		  						memset(old_tokens,'\0',sizeof(old_tokens));
