@@ -46,84 +46,100 @@ int main(int argc,char *argv[]){
   bool flag= false;
 
   while(true){
-		  first = false;
-		  
-		  // User interaction
-		  cout << "Username:";
-		  cin >> user;
-		  
-		  cout << "Password:";
-		  cin >> pswdSeed;
+	  first = false;
+	  
+	  // User interaction
+	  cout << "Username:";
+	  cin >> user;
+	  
+	  cout << "Password:";
+	  cin >> pswdSeed;
 
-	 		// Echo hash in file
-	 		command = "echo " + pswdSeed + "| md5sum > hash_seedPswd";
-  		pswdSeed.clear();
-  		c_command = command.c_str();
-  		system(c_command);
+ 		// Echo hash in file
+ 		command = "echo " + pswdSeed + "| md5sum > hash_seedPswd";
+		pswdSeed.clear();
+		c_command = command.c_str();
+		system(c_command);
 
-			fgets(seed_hash,sizeof(seed_hash),seed);
-		  min = 123;
-		  string _test;
-		  string _seed(seed_hash);
-		  _seed.erase(_seed.length() - 4);
+		fgets(seed_hash,sizeof(seed_hash),seed);
+	  min = 123;
+	  string _test;
+	  string _seed(seed_hash);
+	  _seed.erase(_seed.length() - 4);
+	  int i;
+	  int j;
+		flag = false;
 
-			while(true){
+		while(true){
+			now = time(0);
+			ltm = localtime(&now);
+			// Exec every time that minute is different to the last minute
+			if(min!= (1 + ltm->tm_min)){
+				tokens = fopen("tokens","r");
+  			cout << endl;
+  			//cout << "Enabled tokens:" << endl;
+  			system("> tokens");
+		  	// get various components of tm structure.
+			  year = 1900 + ltm->tm_year;
+			  month = 1 + ltm->tm_mon;
+			  day = ltm->tm_mday;
+			  hour = 1 + ltm->tm_hour;
+			  min = 1 + ltm->tm_min;
+
+  		  for (i=0;i<5;i++){
+  		  	command = "echo -e " + _seed + to_string(year) + to_string(month) + to_string(day)+ to_string(hour) + to_string(min) + " | md5sum | awk '{ print $1 }' >> tokens";
+  		  	//cout << command << endl;
+  		  	c_command = command.c_str();
+					system(c_command);
+					fgets(old_tokens,sizeof(old_tokens),tokens);
+					string _test(old_tokens);
+					//cout << _test << endl;
+          int_token[i] = (long int) md5_int(_test);
+					//cout << to_string(i) + "-: "<<to_string(int_token[i]) << endl;
+					_test.erase(std::remove(_test.begin(), _test.end(), '\n'),_test.end());
+					_seed = _test;
+					memset(old_tokens,'\0',sizeof(old_tokens));
+  		  }
+				fclose(tokens);
+			}
+
+			while(min == (1 + ltm->tm_min)){
+
+				cout << endl;
+				cout << "Insert a token:" << endl;
+				cin >> token;
 				now = time(0);
 				ltm = localtime(&now);
-				// Exec every time that minute is different to the last minute
-  			if(min!= (1 + ltm->tm_min)){
-  				tokens = fopen("tokens","r");
-	  			cout << endl;
-	  			//cout << "Enabled tokens:" << endl;
-	  			system("> tokens");
-			  	// get various components of tm structure.
-				  year = 1900 + ltm->tm_year;
-				  month = 1 + ltm->tm_mon;
-				  day = ltm->tm_mday;
-				  hour = 1 + ltm->tm_hour;
-				  min = 1 + ltm->tm_min;
 
-	  		  for (int i=0;i<5;i++){
-	  		  	command = "echo -e " + _seed + to_string(year) + to_string(month) + to_string(day)+ to_string(hour) + to_string(min) + " | md5sum | awk '{ print $1 }' >> tokens";
-	  		  	//cout << command << endl;
-	  		  	c_command = command.c_str();
-						system(c_command);
-						fgets(old_tokens,sizeof(old_tokens),tokens);
-						string _test(old_tokens);
-						//cout << _test << endl;
-            int_token[i] = (long int) md5_int(_test);
-						cout << to_string(i) + "-: "<<to_string(int_token[i]) << endl;
-						_test.erase(std::remove(_test.begin(), _test.end(), '\n'),_test.end());
-						_seed = _test;
-						memset(old_tokens,'\0',sizeof(old_tokens));
-	  		  }
-
-						fclose(tokens);
-
-					flag = false;
-
-					cout << "Insert a token:" << endl;
-					cin << token;
-
-
-					for(i=0;i<5;i++){
-						if(token == int_token[i])
-							flag = true;
-							break;
-						else
-							flag = false;
+				for(i=0;i<5;i++){
+					if(token == int_token[i]){
+						flag = true;
+						break;
 					}
+					else
+						flag = false;
+				}
 
-					for(j=4;j>=i;j--){
-						int_token[j]=0;							
-					}
+				for(j=4;j>=i;j--){
+					int_token[j]=0;
+					//cout << to_string(j) + "-: "<<to_string(int_token[j]) << endl;							
+				}
 
+				cout << endl;
+				if(flag){
 
+					cout << "Valid key!" << endl;
+					cout << "OK!" << endl;
+				}
+				else{
+				 	cout << "Try again!" << endl;
+				 }	  	
 
-
-		  	}
-		  }
-	} 	
+				 cout << "-------------------------------" << endl;
+			}	 
+		}
+	}
+	 	
   return 0;
 }
 
